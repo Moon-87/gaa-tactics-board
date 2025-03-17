@@ -5,38 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAA Tactics Board</title>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <div class="player-list">
-            <div class="controls">
-                <select id="teamSize">
-                    <option value="11">11-a-side</option>
-                    <option value="13">13-a-side</option>
-                    <option value="15">15-a-side</option>
-                </select>
-                <button onclick="clearPitch()">Clear Pitch</button>
-            </div>
-            <h3>Available Players</h3>
-            <ul id="playersList"></ul>
-        </div>
-        <div class="pitch">
-            <div class="pitch-lines">
-                <div class="forty-five"></div>
-                <div class="forty-five right"></div>
-                <div class="twenty-one"></div>
-                <div class="twenty-one right"></div>
-                <div class="square left"></div>
-                <div class="square right"></div>
-                <div class="center-line"></div>
-                <div class="scoring-area left"></div>
-                <div class="scoring-area right"></div>
-                <div class="scoring-arc left"></div>
-                <div class="scoring-arc right"></div>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+        height: 100vh;
+    }
+
+    .player-list {
+        width: 100%;
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        max-height: 30vh;
+        overflow-y: auto;
+    }
+
+    .pitch {
+        flex-grow: 1;
+        min-height: 60vh;
+        background: #4CAF50;
+        position: relative;
+        border: 2px solid white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .pitch-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 5px solid white;
+    }
+
+    /* Existing pitch markings CSS remains the same */
+    .scoring-area {
+        position: absolute;
+        width: 30%;
+        height: 40%;
+        border: 2px solid white;
+        top: 30%;
+    }
+
+    .scoring-area.left {
+        left: 0;
+        border-left: none;
+    }
+
+    .scoring-area.right {
+        right: 0;
+        border-right: none;
+    }
+
+    .scoring-arc {
+        position: absolute;
+        width: 15%;
+        height: 30%;
+        border: 2px solid white;
+        border-radius: 0 100% 100% 0;
+        top: 35%;
+    }
+
+    .scoring-arc.left {
+        left: 15%;
+        transform: scaleX(-1);
+    }
+
+    .scoring-arc.right {
+        right: 15%;
+    }
+
+    .forty-five {
+        position: absolute;
+        width: 45%;
+        height: 100%;
+        border-right: 2px solid white;
+    }
+
+    .forty-five.right {
+        right: 0;
+        border-left: 2px solid white;
+        border-right: none;
+    }
+
+    .twenty-one {
+        position: absolute;
+        width: 25%;
+							  heigt: 100%;

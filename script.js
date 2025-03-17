@@ -22,6 +22,8 @@ const players = [
 ];
 
 let selectedPlayers = new Set();
+let swapMode = false;
+let playerToSwap = null;
 const pitch = document.querySelector('.pitch');
 
 function getCountyColor(playerName) {
@@ -35,18 +37,20 @@ function getCountyColor(playerName) {
 }
 
 function togglePlayer(playerName, listItem) {
+    if (swapMode) {
+        if (selectedPlayers.has(playerName)) {
+            alert("Player is already on the pitch!");
+            return;
+        }
+        addPlayerToPitch(playerName);
+        listItem.classList.add('selected');
+        return;
+    }
+
     if (selectedPlayers.has(playerName)) {
-        // Remove player from pitch
-        const playerElements = document.querySelectorAll('.player');
-        playerElements.forEach(el => {
-            if (el.getAttribute('data-player') === playerName) {
-                el.remove();
-            }
-        });
-        selectedPlayers.delete(playerName);
+        removePlayer(new Event('click'), playerName);
         listItem.classList.remove('selected');
     } else {
-        // Add player to pitch
         const teamSize = parseInt(document.getElementById('teamSize').value);
         if (selectedPlayers.size >= teamSize) {
             alert(`Maximum ${teamSize} players allowed`);
@@ -54,6 +58,75 @@ function togglePlayer(playerName, listItem) {
         }
         addPlayerToPitch(playerName);
         listItem.classList.add('selected');
+    }
+}
+
+function addPlayerToPitch(playerName) {
+    if (swapMode && playerToSwap) {
+        const existingPlayer = document.querySelector(`[data-player="${playerToSwap}"]`);
+        if (existingPlayer) {
+            existingPlayer.setAttribute('data-player', playerName);
+            existingPlayer.querySelector('.player-name').textContent = playerName.split('(')[0].trim();
+            existingPlayer.style.backgroundColor = getCountyColor(playerName);
+            existingPlayer.setAttribute('title', playerName);
+        }
+
+        selectedPlayers.delete(playerToSwap);
+        selectedPlayers.add(playerName);
+
+        swapMode = false;
+        playerToSwap = null;
+        document.querySelectorAll('#playersList li').forEach(li => li.classList.remove('swap-mode'));
+        return;
+    }
+
+    const player = document.createElement('div');
+    player.className = 'player';
+    player.setAttribute('data-player', playerName);
+
+    const displayName = playerName.split('(')[0].trim();
+
+    player.innerHTML = `
+        <span class="player-name">${displayName}</span>
+        <div class="remove-player" onclick="removePlayer(event, '${playerName}')">×</div>
+    `;
+
+    player.setAttribute('title', playerName);
+    player.style.backgroundColor = getCountyColor(playerName);
+
+    const rect = pitch.getBoundingClientRect();
+    const x = Math.random() * (rect.width - 50);
+    const y = Math.random() * (rect.height - 50);
+
+    player.style.left = x + 'px';
+    player.style.top = y + 'px';
+
+    player.addEventListener('dblclick', () => {
+        swapMode = true;
+        playerToSwap = playerName;
+        document.querySelectorAll('#playersList li').forEach(li => {
+            if (li.textContent === playerName) {
+                li.classList.add('swap-mode');
+            }
+        });
+    });
+
+    pitch.appendChild(player);
+    selectedPlayers.add(playerName);
+}
+
+function removePlayer(event, playerName) {
+    event.stopPropagation();
+    const playerElement = document.querySelector(`[data-player="${playerName}"]`);
+    if (playerElement) {
+        playerElement.remove();
+        selectedPlayers.delete(playerName);
+
+        document.querySelectorAll('#playersList li').forEach(li => {
+            if (li.textContent === playerName) {
+                li.classList.remove('selected');
+            }
+        });
     }
 }
 
@@ -69,29 +142,6 @@ function initializePlayers() {
         li.style.borderLeft = `4px solid ${countyColor}`;
         playersList.appendChild(li);
     });
-}
-
-function addPlayerToPitch(playerName) {
-    const player = document.createElement('div');
-    player.className = 'player';
-    player.setAttribute('data-player', playerName);
-
-    // Get player name without county
-    const displayName = playerName.split('(')[0].trim();
-
-    player.innerHTML = `<span class="player-name">${displayName}</span>`;
-    player.setAttribute('title', playerName);
-    player.style.backgroundColor = getCountyColor(playerName);
-
-    const rect = pitch.getBoundingClientRect();
-    const x = Math.random() * (rect.width - 50);
-    const y = Math.random() * (rect.height - 50);
-
-    player.style.left = x + 'px';
-    player.style.top = y + 'px';
-
-    pitch.appendChild(player);
-    selectedPlayers.add(playerName);
 }
 
 function clearPitch() {

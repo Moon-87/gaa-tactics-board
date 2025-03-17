@@ -1,1 +1,199 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
 
+.container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+.player-list {
+    width: 300px;
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.pitch {
+    flex-grow: 1;
+    height: 80vh;
+    background: #4CAF50;
+    position: relative;
+    border: 2px solid white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* GAA Pitch Markings */
+.pitch-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 5px solid white;
+}
+
+.scoring-area {
+    position: absolute;
+    width: 30%;
+    height: 40%;
+    border: 2px solid white;
+    top: 30%;
+}
+
+.scoring-area.left {
+    left: 0;
+    border-left: none;
+}
+
+.scoring-area.right {
+    right: 0;
+    border-right: none;
+}
+
+.scoring-arc {
+    position: absolute;
+    width: 15%;
+    height: 30%;
+    border: 2px solid white;
+    border-radius: 0 100% 100% 0;
+    top: 35%;
+}
+
+.scoring-arc.left {
+    left: 15%;
+    transform: scaleX(-1);
+}
+
+.scoring-arc.right {
+    right: 15%;
+}
+
+.forty-five {
+    position: absolute;
+    width: 45%;
+    height: 100%;
+    border-right: 2px solid white;
+}
+
+.forty-five.right {
+    right: 0;
+    border-left: 2px solid white;
+    border-right: none;
+}
+
+.twenty-one {
+    position: absolute;
+    width: 25%;
+    height: 100%;
+    border-right: 2px solid white;
+}
+
+.twenty-one.right {
+    right: 0;
+    border-left: 2px solid white;
+    border-right: none;
+}
+
+.square {
+    position: absolute;
+    width: 15%;
+    height: 30%;
+    border: 2px solid white;
+}
+
+.square.left {
+    left: 0;
+    top: 35%;
+}
+
+.square.right {
+    right: 0;
+    top: 35%;
+}
+
+.center-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: white;
+}
+
+.player {
+    width: 50px;
+    height: 50px;
+    background: #ff4444;
+    border-radius: 50%;
+    position: absolute;
+    cursor: move;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    touch-action: none;
+    user-select: none;
+    z-index: 100;
+}
+
+.player .position {
+    font-size: 8px;
+    margin-top: 2px;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+select, button {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background: #2196F3;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1976D2;
+}
+
+#playersList {
+    list-style: none;
+    margin-top: 10px;
+}
+
+#playersList li {
+    padding: 8px;
+    margin: 5px 0;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#playersList li:hover {
+    background: #e0e0e0;
+}
+
+.selected {
+    background: #2196F3 !important;
+    color: white;
+}
+```

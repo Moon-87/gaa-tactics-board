@@ -1,1 +1,44 @@
-
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAA Tactics Board</title>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="player-list">
+            <div class="controls">
+                <select id="teamSize">
+                    <option value="11">11-a-side</option>
+                    <option value="13">13-a-side</option>
+                    <option value="15">15-a-side</option>
+                </select>
+                <button onclick="clearPitch()">Clear Pitch</button>
+            </div>
+            <h3>Available Players</h3>
+            <ul id="playersList"></ul>
+        </div>
+        <div class="pitch">
+            <div class="pitch-lines">
+                <div class="forty-five"></div>
+                <div class="forty-five right"></div>
+                <div class="twenty-one"></div>
+                <div class="twenty-one right"></div>
+                <div class="square left"></div>
+                <div class="square right"></div>
+                <div class="center-line"></div>
+                <div class="scoring-area left"></div>
+                <div class="scoring-area right"></div>
+                <div class="scoring-arc left"></div>
+                <div class="scoring-arc right"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+```

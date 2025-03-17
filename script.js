@@ -1,25 +1,3 @@
-const positions = {
-    '15': [
-        "Goalkeeper", "Right Corner-Back", "Full-Back", "Left Corner-Back",
-        "Right Half-Back", "Centre-Back", "Left Half-Back",
-        "Midfielder", "Midfielder",
-        "Right Half-Forward", "Centre-Forward", "Left Half-Forward",
-        "Right Corner-Forward", "Full-Forward", "Left Corner-Forward"
-    ],
-    '13': [
-        "Goalkeeper", "Right Corner-Back", "Full-Back", "Left Corner-Back",
-        "Right Half-Back", "Centre-Back", "Left Half-Back",
-        "Midfielder", "Midfielder",
-        "Right Forward", "Centre-Forward", "Full-Forward", "Left Forward"
-    ],
-    '11': [
-        "Goalkeeper", "Right Back", "Full-Back", "Left Back",
-        "Right Half-Back", "Centre-Back", "Left Half-Back",
-        "Midfielder",
-        "Right Forward", "Centre-Forward", "Left Forward"
-    ]
-};
-
 const players = [
     "David Clifford (Kerry)",
     "Con O'Callaghan (Dublin)",
@@ -56,47 +34,53 @@ function getCountyColor(playerName) {
     return "#ff4444";
 }
 
+function togglePlayer(playerName, listItem) {
+    if (selectedPlayers.has(playerName)) {
+        // Remove player from pitch
+        const playerElements = document.querySelectorAll('.player');
+        playerElements.forEach(el => {
+            if (el.getAttribute('data-player') === playerName) {
+                el.remove();
+            }
+        });
+        selectedPlayers.delete(playerName);
+        listItem.classList.remove('selected');
+    } else {
+        // Add player to pitch
+        const teamSize = parseInt(document.getElementById('teamSize').value);
+        if (selectedPlayers.size >= teamSize) {
+            alert(`Maximum ${teamSize} players allowed`);
+            return;
+        }
+        addPlayerToPitch(playerName);
+        listItem.classList.add('selected');
+    }
+}
+
 function initializePlayers() {
     const playersList = document.getElementById('playersList');
-    const teamSize = document.getElementById('teamSize').value;
     playersList.innerHTML = '';
 
-    players.forEach((player, index) => {
+    players.forEach(player => {
         const li = document.createElement('li');
-        li.innerHTML = `
-            <span>${player}</span>
-            <span style="color: #666">${positions[teamSize][index] || ''}</span>
-        `;
-        li.onclick = () => addPlayerToPitch(player, positions[teamSize][index]);
-
+        li.textContent = player;
+        li.onclick = () => togglePlayer(player, li);
         const countyColor = getCountyColor(player);
         li.style.borderLeft = `4px solid ${countyColor}`;
-
         playersList.appendChild(li);
     });
 }
 
-function addPlayerToPitch(playerName, position) {
-    const teamSize = parseInt(document.getElementById('teamSize').value);
-    if (selectedPlayers.size >= teamSize) {
-        alert(`Maximum ${teamSize} players allowed`);
-        return;
-    }
-
-    if (selectedPlayers.has(playerName)) {
-        return;
-    }
-
+function addPlayerToPitch(playerName) {
     const player = document.createElement('div');
     player.className = 'player';
-    const nameParts = playerName.split('(')[0].trim().split(' ');
-    const initials = nameParts.map(n => n[0]).join('');
+    player.setAttribute('data-player', playerName);
 
-    player.innerHTML = `
-        ${initials}
-        <span class="position">${position || ''}</span>
-    `;
-    player.setAttribute('title', `${playerName} - ${position}`);
+    // Get player name without county
+    const displayName = playerName.split('(')[0].trim();
+
+    player.innerHTML = `<span class="player-name">${displayName}</span>`;
+    player.setAttribute('title', playerName);
     player.style.backgroundColor = getCountyColor(playerName);
 
     const rect = pitch.getBoundingClientRect();
@@ -108,12 +92,6 @@ function addPlayerToPitch(playerName, position) {
 
     pitch.appendChild(player);
     selectedPlayers.add(playerName);
-
-    const playersList = document.getElementById('playersList');
-    const playerItem = Array.from(playersList.children).find(li => li.textContent.includes(playerName));
-    if (playerItem) {
-        playerItem.classList.add('selected');
-    }
 }
 
 function clearPitch() {
